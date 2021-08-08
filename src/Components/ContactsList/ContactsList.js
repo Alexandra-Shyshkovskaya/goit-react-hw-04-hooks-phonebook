@@ -2,27 +2,22 @@ import React from "react";
 import style from "./ContactsList.module.css";
 import PropTypes from "prop-types";
 
-const ContactList = ({ contacts, deleteContacts }) => {
+function ContactsList({ contacts, deleteContacts }) {
   return (
     <ul className={style.list}>
       {contacts.map(({ id, name, number }) => (
         <li key={id} className={style.item}>
-          <span className={style.textName}>{name}:</span>
-          <span className={style.textNumber}>{number}</span>
-          <button
-            type="button"
-            className={style.button}
-            onClick={() => deleteContacts(id)}
-          >
+          <p className={style.textName}>{name}</p>
+          <p className={style.textNumber}>{number}</p>
+          <button className={style.button} onClick={() => deleteContacts(id)}>
             Delete
           </button>
         </li>
       ))}
     </ul>
   );
-};
-
-ContactList.propTypes = {
+}
+ContactsList.propTypes = {
   contacts: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
@@ -32,5 +27,4 @@ ContactList.propTypes = {
   ),
   deleteContacts: PropTypes.func,
 };
-
-export default ContactList;
+export default ContactsList;

@@ -1,41 +1,44 @@
-import React, { Component } from "react";
+import { useState } from "react";
+import PropTypes from "prop-types";
 import style from "./ContactsForm.module.css";
 
-const INITIAL_STATE = {
-  name: "",
-  number: "",
-};
+function ContactForm({ onSubmit }) {
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
 
-class ContactForm extends Component {
-  state = { ...INITIAL_STATE };
-
-  handleChange = (event) => {
+const handleChange = (event) => {
     const { name, value } = event.currentTarget;
-    this.setState({
-      [name]: value,
-    });
+
+    switch (name) {
+      case "name":
+        setName(value);
+        break;
+      case "number":
+        setNumber(value);
+        break;
+      default:
+        return;
+    }
   };
 
-  reset = () => {
-    this.setState({ name: "", number: "" });
-  };
-
-  handleSubmit = (event) => {
+const handleSubmit = (event) => {
     event.preventDefault();
-    this.props.addContacts(this.state);
-    this.reset();
+    onSubmit(name, number);
+    resetForm();
+};
+  
+const resetForm = () => {
+    setName("");
+    setNumber("");
   };
 
-  render() {
-    const { name, number } = this.state;
-
-    return (
-      <form className={style.ContactForm} onSubmit={this.handleSubmit}>
+return (
+      <form className={style.ContactForm} onSubmit={handleSubmit}>
         <label className={style.label}>Name</label>
         <input
           className={style.input}
           value={name}
-          onChange={this.handleChange}
+          onChange={handleChange}
           type="text"
           name="name"
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -47,7 +50,7 @@ class ContactForm extends Component {
         <input
           className={style.input}
           value={number}
-          onChange={this.handleChange}
+          onChange={handleChange}
           type="tel"
           name="number"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
@@ -61,6 +64,10 @@ class ContactForm extends Component {
       </form>
     );
   }
-}
+  
+ ContactForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+}; 
 
 export default ContactForm;
+
